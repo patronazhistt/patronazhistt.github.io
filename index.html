@@ -1,4 +1,88 @@
 <!DOCTYPE html>
 <html>
- <iframe src="https://www.example.org" style="width:100vw;height:100vh;"></iframe> 
+<head>
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet"/>
+</head>
+<body style="background:black;overflow: auto;">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.0/css/all.css"
+      integrity="sha384-lKuwvrZot6UHsBSfcMvOkWwlCMgc0TaWr+30HWe3a4ltaBwTZhyTEggF5tJv8tbt" crossorigin="anonymous">
+<div class="container">
+    <br/>
+    <br/>
+    <br/>
+    <div class="row justify-content-center" style="text-align:center;font-family: Roboto, sans-serif;">
+        <h2 style="color:red">Gjej informacionin e mbledhur per ty nga patronazhistet</h2>
+    </div>
+    <br/>
+    <br/>
+    <div class="row justify-content-center">
+        <div class="col-12 col-md-10 col-lg-8">
+            <form class="card card-sm" style="background: #222" onsubmit="getInfo();return false;">
+                <div class="card-body row no-gutters align-items-center">
+                    <div class="col">
+                        <input class="form-control form-control-lg form-control-borderless" type="search"
+                               placeholder="Vendos numrin tend ID... " id="pid"
+                               style="background: #444;color: white;font-family: Roboto, sans-serif;">
+                    </div>
+                    <div class="col-auto">
+                        <button class="btn btn-lg btn-danger" type="submit">Kerko</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <br/>
+    <br/>
+    <div class="row justify-content-center">
+        <table id="result" style="color: white;width: 100%"></table>
+        <h6 id="no-results" style="visibility: hidden;color:white">Nuk u gjeten rezultate</h6>
+    </div>
+    <br/>
+</div>
+</body>
+<script>
+    async function getInfo() {
+        let pid = document.getElementById("pid").value
+
+        let url = `http://54.78.41.9:3000/${pid}`;
+
+        let response = await fetch(url)
+
+        let table = document.getElementById("result")
+        table.innerHTML = ""
+        document.getElementById("no-results").style.visibility = "hidden"
+
+        try {
+            let j = await response.json()
+
+            if (j.length < 1) {
+                document.getElementById("no-results").style.visibility = "visible";
+                return
+            }
+
+            let count = 0
+            Object.keys(j[0]).forEach(function (key) {
+                let currentRow = table.insertRow(count)
+
+                let headerCell = currentRow.insertCell(0);
+                headerCell.innerHTML = key
+
+                let bodyCell = currentRow.insertCell(1);
+                bodyCell.innerHTML = j[0][key]
+                count++
+            })
+        } catch (e) {
+        }
+    }
+</script>
+<style>
+    table,
+    td {
+        border: 1px solid #666;
+    }
+</style>
 </html>
